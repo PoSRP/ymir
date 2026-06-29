@@ -38,6 +38,8 @@ void ymir_request_rollback(void);
 void ymir_enter_update(void);
 // 1 if valid 8-byte DFU trigger
 int  ymir_is_enter_update_request(const uint8_t *header);
+// Feed the watchdog to avoid getting force rebooted (~16 seconds)
+void ymir_feed_watchdog(void);
 ```
 
 **C++20 API**:
@@ -47,6 +49,7 @@ void ymir::confirm_boot();
 void ymir::request_rollback();
 void ymir::enter_update();
 bool ymir::is_enter_update_request(std::span<const uint8_t, 8> header);
+void ymir::feed_watchdog();
 ```
 
 Rollback policy: if `boot_count >= 3 && !confirmed` the bootloader switches slots.
