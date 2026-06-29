@@ -4,6 +4,7 @@ set -euo pipefail
 
 BAUD=115200
 APP_PID=22337  # 0x5741  default; override with -p/--pid
+SERIAL=""  # USB serial filter; empty = first match wins
 PORT=""  # set just before port_open; used in send_frame error messages
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -86,6 +87,10 @@ function find_port_by_pid() {
         [[ -f "${dev}idVendor" ]] || continue
         [[ "$(< "${dev}idVendor")" == "$VID" ]] || continue
         [[ "$(< "${dev}idProduct")" == "$pid_hex" ]] || continue
+        if [[ -n "$SERIAL" ]]; then
+            [[ -f "${dev}serial" ]] || continue
+            [[ "$(< "${dev}serial")" == "$SERIAL" ]] || continue
+        fi
         for tty in "${dev}"*/tty/tty*/; do
             [[ -d "$tty" ]] || continue
             printf "/dev/%s\n" "$(basename "$tty")"
@@ -358,8 +363,9 @@ function usage() {
 Usage: flash_tool.sh [OPTIONS] COMMAND
 
 Options:
-  -b, --baud BAUD   Baud rate (default: 115200)
-  -p, --pid  PID    Application USB PID in decimal or hex (default: 0x5741)
+  -b, --baud   BAUD    Baud rate (default: 115200)
+  -p, --pid    PID     Application USB PID in decimal or hex (default: 0x5741)
+  -s, --serial SERIAL  USB serial number to target (default: first match wins)
 
 Commands:
   update  <file.elf>   Send DFU trigger, wait for bootloader, flash image
@@ -375,8 +381,9 @@ EOF
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -b|--baud) BAUD=$2; shift 2 ;;
-        -p|--pid)  APP_PID=$(( $2 )); shift 2 ;;
+        -b|--baud)   BAUD=$2; shift 2 ;;
+        -p|--pid)    APP_PID=$(( $2 )); shift 2 ;;
+        -s|--serial) SERIAL=$2; shift 2 ;;
         update|status) break ;;
         -h|--help) usage ;;
         *) die "unknown option: $1" ;;
