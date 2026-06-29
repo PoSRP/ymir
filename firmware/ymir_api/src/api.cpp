@@ -63,6 +63,8 @@ extern "C" void ymir_enter_update(void)
     platform_hang();
 }
 
+extern "C" void ymir_feed_watchdog(void) { platform_iwdg_feed(); }
+
 extern "C" void ymir_request_rollback(void)
 {
     auto m_opt = ymir::metadata::read();

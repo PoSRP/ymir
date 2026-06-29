@@ -122,6 +122,15 @@ TEST_CASE("ymir_confirm_boot is noop without metadata", "[bootloader_api]")
     REQUIRE(g_test_iwdg_kr == 0xAAAA);
 }
 
+TEST_CASE("ymir_feed_watchdog reloads IWDG", "[bootloader_api]")
+{
+    g_test_iwdg_kr = 0;
+
+    ymir_feed_watchdog();
+
+    REQUIRE(g_test_iwdg_kr == 0xAAAA);
+}
+
 TEST_CASE("ymir_request_rollback sets boot_count and resets", "[bootloader_api]")
 {
     fake_flash_reset();

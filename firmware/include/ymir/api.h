@@ -35,6 +35,12 @@ void ymir_enter_update(void);
  */
 int ymir_is_enter_update_request(const uint8_t* header);
 
+/**
+ * Reload the independent watchdog. Must be called at least every ~16 seconds
+ * (per the bootloader's IWDG config) or the MCU resets.
+ */
+void ymir_feed_watchdog(void);
+
 #ifdef __cplusplus
 }
 
@@ -47,6 +53,7 @@ inline int  current_slot() { return ymir_current_slot(); }
 inline void confirm_boot() { ymir_confirm_boot(); }
 inline void request_rollback() { ymir_request_rollback(); }
 inline void enter_update() { ymir_enter_update(); }
+inline void feed_watchdog() { ymir_feed_watchdog(); }
 
 inline bool is_enter_update_request(std::span<const uint8_t, 8> header)
 {
