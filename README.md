@@ -63,8 +63,9 @@ If neither slot validates, it halts with a 2-blink fault pattern.
 Usage: flash_tool.sh [OPTIONS] COMMAND
 
 Options:
-  -b, --baud BAUD   Baud rate (default: 115200)
-  -p, --pid  PID    Application USB PID in decimal or hex (default: 0x5741)
+  -b, --baud   BAUD    Baud rate (default: 115200)
+  -p, --pid    PID     Application USB PID in decimal or hex (default: 0x5741)
+  -s, --serial SERIAL  USB serial number to target (default: first match wins)
 
 Commands:
   update  <file.elf>   Send DFU trigger, wait for bootloader, flash image
