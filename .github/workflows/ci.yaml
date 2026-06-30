@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '30 1 * * 0'
+
+jobs:
+  build-and-test:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: selfhosted-ymir
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build ymir
+        run: ./build.sh build
+
+      - name: Build test images
+        run: ./build.sh build-test-images
+
+      - name: Run tests
+        run: ./build.sh test

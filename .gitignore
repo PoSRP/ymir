@@ -1,0 +1,6 @@
+firmware/build/*
+firmware/test_app_baremetal/build/*
+firmware/test_app_rtos/build/*
+
+**/__pycache__/*
+**/.vscode/*
